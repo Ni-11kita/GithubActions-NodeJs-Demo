@@ -15,7 +15,7 @@ jobs:
         with:
           node-version: 18
       - name: install dependencies using npm
-        run: nmpm install
+        run: npm install
       - name: run test using npm
         run: npm test
       - name: buid the application using npm
