@@ -20,3 +20,9 @@ jobs:
         run: npm test
       - name: buid the application using npm
         run: npm run build
+      - name: upload artifact from runner tocurrent github directory
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifact
+          path: /home/runner/work/GithubActions-NodeJs-Demo/GithubActions-NodeJs-Demo/dist/index.html 
+
