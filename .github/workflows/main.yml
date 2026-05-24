@@ -6,10 +6,16 @@ on:
   workflow_dispatch:
 jobs:
   buildnodejs:
+    continue-on-error: true
     strategy:
       matrix:
-        node-version: [18, 20]
+        node-version: [12, 14, 18, 20]
         operating-system: [ubuntu-latest, windows-latest]
+        exclude:
+          - node-version: 12
+            operating-system: windows-latest
+          - node-version: 12
+            operating-system: windows-latest
     runs-on: ${{ matrix.operating-system }}
     steps:
       - name: checkout code
