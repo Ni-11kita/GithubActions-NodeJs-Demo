@@ -6,14 +6,18 @@ on:
   workflow_dispatch:
 jobs:
   buildnodejs:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18, 20]
+        operating-system: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.operating-system }}
     steps:
       - name: checkout code
         uses: actions/checkout@v6
-      - name: install nodejs versions of 18 and npm
+      - name: install nodejs versions of ${{ matrix.node-version }} and npm
         uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version: ${{ matrix.node-version }}
       - name: install dependencies using npm
         run: npm install
       - name: run test using npm
