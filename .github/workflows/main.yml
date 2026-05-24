@@ -1,37 +1,28 @@
----
-name: runtime input demo
+name: Build NodeJs application
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
-    inputs:
-      runner:
-        description: 'choose the runner to run the workflow'
-        required: true
-        default: 'ubuntu-latest'   
-        type: choice
-        options:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
-      job-name:
-        description: 'Enter multiple job names to run, separate them by comma'
-        required: true
-        type: string
 jobs:
-  build-job:
-    if: contains(github.event.inputs['job-name'], 'build-job')
-    runs-on: ${{ github.event.inputs['runner'] }}
+  buildnodejs:
+    runs-on: self-hosted
     steps:
-      - name: build steps
-        run: echo "this is build job and running on ${{ github.event.inputs['runner'] }} runner" 
-  test-job:
-    if: contains(github.event.inputs['job-name'], 'test-job')
-    runs-on: ${{ github.event.inputs['runner'] }}
-    steps:
-      - name: test steps
-        run: echo "this is test job and running on ${{ github.event.inputs['runner'] }} runner"
-  deploy-job:
-    if: contains(github.event.inputs['job-name'], 'deploy-job') 
-    runs-on: ${{ github.event.inputs['runner'] }}
-    steps:
-      - name: deploy steps
-        run: echo "this is deploy job and running on ${{ github.event.inputs['runner'] }} runner" 
+      - name: checkout code
+        uses: actions/checkout@v6
+      - name: install nodejs versions of 18 and npm
+        uses: actions/setup-node@v6
+        with:
+          node-version: 18
+      - name: install dependencies using npm
+        run: npm install
+      - name: run test using npm
+        run: npm test
+      - name: buid the application using npm
+        run: npm run build
+      - name: upload artifact from runner tocurrent github directory
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-artifact
+          path: /home/runner/work/GithubActions-NodeJs-Demo/GithubActions-NodeJs-Demo/dist/index.html 
+
